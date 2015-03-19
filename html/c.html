@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script>
+$(document).ready(function(){
+    $("#serial_button").click(function(){
+        var myobj = {Name:$("#Name").val(),Comment:$("#Comment").val()};
+        jobj = JSON.stringify(myobj);
+        $("#json").text(jobj);
+        
+	var url = "http://52.10.245.254/comment";
+        //$.post(url,jobj,function(data,textStatus) {
+        //  $("#done").append(textStatus);
+        //});
+	jQuery.ajax ({
+            url: url,
+            type: "POST",
+            data: jobj,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function(){
+              $("#done").append("Success");
+            }
+        });
+    });
+
+    $("#print_button").click(function(){
+        
+        var url = "http://52.10.245.254/comment";
+
+        $.getJSON(url,function(data) {
+          var everything;
+          everything = "<ul>";
+          $.each(data, function(i,item) {
+            everything += "<li> Name: "+data[i].Name+" Comment: "+data[i].Comment;
+          });
+          everything += "</ul>";
+          $("#currentComments").html(everything);
+        });
+    });
+});
+</script>
+</head>
+<body>
+
+<form id="commentForm" action="">
+  Name: <input type="text" id="Name" value="Mickey"><br>
+  Comment: <input type="text" id="Comment" value="Hello"><br>
+</form>
+
+<button id="serial_button">Serialize form values</button>
+<button id="print_button">Print data values</button>
+
+<div id="json"></div>
+<div id="done"></div>
+<div id="currentComments"></div>
+
+</body>
+</html>
